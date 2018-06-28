@@ -1,0 +1,43 @@
+*
+{
+    padding: 0;
+    margin: 0;
+}
+
+.tab_menu
+{
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.tab_button
+{
+    width: 150px;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tab_button:hover
+{
+    background-color: black;
+    color: white;
+}
+
+.tabpage
+{
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+canvas
+{
+    border: 1px solid #E65858;
+    border-radius:4px;
+}
