@@ -1,0 +1,74 @@
+<script>
+//~ var pingstats = {values:[<?php
+                //~ $link = mysql_connect("localhost", "loguser", "Galm34..") or die(mysql_error());
+//~ 
+                //~ $data = mysql_select_db("logger", $link) or die(mysql_error());
+//~ 
+                //~ $query = "SELECT COUNT(`ID`) as datacount, ROUND(MAX(`Ping`), 3) as maxping, ROUND(MIN(`Ping`), 3) as minping, ROUND(AVG(`Ping`), 3) as avgping FROM `logs`;";
+                //~ 
+                //~ $result = mysql_query($query, $link) or die(mysql_error());
+                    //~ 
+                //~ if($row = mysql_fetch_array($result))
+                //~ {
+                    //~ echo "{min:{$row["minping"]},max:{$row["maxping"]},avg:{$row["avgping"]}}]};";
+                //~ }
+                //~ 
+                //~ echo "var datacount = {$row["datacount"]};"
+            //~ ?>
+                //~ 
+//~ var tempstats = {values:[<?php
+                //~ $query = "SELECT ROUND(MAX(`CPUTemp`), 3) as maxcpu, ROUND(MIN(`CPUTemp`), 3) as mincpu, ROUND(AVG(`CPUTemp`), 3) as avgcpu FROM `logs`;";
+                //~ 
+                //~ $result = mysql_query($query, $link) or die(mysql_error());
+                //~ 
+                //~ if($row = mysql_fetch_array($result))
+                //~ {
+                    //~ echo "{min:{$row["mincpu"]},max:{$row["maxcpu"]},avg:{$row["avgcpu"]}}";
+                //~ }
+            //~ ?>]};
+//~ 
+//~ var ramstats = {values:[<?php
+                //~ $query = "SELECT ROUND(MAX(`UsedRAM`), 3) as maxram, ROUND(MIN(`UsedRAM`), 3) as minram, ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs` WHERE `UsedRAM` > 0;";
+                //~ 
+                //~ $result = mysql_query($query, $link) or die(mysql_error());
+                //~ 
+                //~ if($row = mysql_fetch_array($result))
+                //~ {
+                    //~ echo "{min:{$row["minram"]},max:{$row["maxram"]},avg:{$row["avgram"]}}";
+                //~ }
+            //~ ?>]};
+            //~ 
+//~ var data = {values:[<?php
+                //~ $where = "";
+                    //~ 
+                //~ if(isset($_GET["date"]) && !empty($_GET["date"]))
+                //~ {
+                    //~ $date = mysql_real_escape_string($_GET["date"]);
+                        //~ 
+                    //~ if(isset($_GET["am"]))
+                    //~ {
+                        //~ $where = "WHERE `Date` = '{$date}' AND `Time` <= '12:00:05'";
+                    //~ }
+                    //~ else if(isset($_GET["pm"]))
+                    //~ {
+                        //~ $where = "WHERE `Date` = '{$date}' AND `Time` > '12:00:05'";
+                    //~ }
+                //~ }
+                    //~ 
+                //~ $query = "SELECT `Date`,`Time`,`Ping`,`CPUTemp`,`UsedRAM` FROM `logs` {$where} ORDER BY `Date` DESC, `Time` DESC LIMIT 48;";
+                //~ $result = mysql_query($query, $link) or die(mysql_error());
+                //~ while($row = mysql_fetch_array($result))
+                //~ {
+                    //~ echo "{DateTime:'{$row["Date"]} {$row["Time"]}', Ping:{$row["Ping"]},CPUTemp:{$row["CPUTemp"]},RAM:{$row["UsedRAM"]}},";
+                //~ }
+            //~ ?>]};
+//~ var dailydata = { values:[<?php
+                //~ $query = "SELECT `Date`, ROUND(AVG(`Ping`), 3) as avgping, ROUND(AVG(`CPUTemp`), 3) as avgtemp, ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs` GROUP BY `Date` ORDER BY `Date` DESC LIMIT 12;";
+                //~ $result = mysql_query($query, $link) or die(mysql_error());
+                //~ while($row = mysql_fetch_array($result))
+                //~ {
+                    //~ echo "{Date:'{$row["Date"]}',AVGPing:{$row["avgping"]},AVGCPUTemp:{$row["avgtemp"]},AVGRAM:{$row["avgram"]}},";
+                //~ }
+                //~ mysql_close($link);
+            //~ ?>]};
+        </script>

@@ -18,7 +18,7 @@ function renderGrid(context, width)
     context.stroke();
 }
 
-function renderCanvas1()
+function renderCanvas1(json)
 {
     canvas = document.getElementById("canvas_diagramm_ping");
     
@@ -31,12 +31,12 @@ function renderCanvas1()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / data.values.length;
+    var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        ping = data.values[i].Ping;
+        ping = json.data.values[i].Ping;
         tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
         tmpHeight = ((ping * graphFactor)).toFixed();
 
@@ -52,14 +52,15 @@ function renderCanvas1()
             context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
         }
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding + 2, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding + 2, tmpHeight);
         
         context.fillStyle = graphTextcolor;
         context.fillText(~~ping + "ms", graphWidth + ((i - 1) * graphWidth) + graphPadding, canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas2()
+function renderCanvas2(json)
 {
     canvas = document.getElementById("canvas_diagramm_temp");
     
@@ -72,12 +73,12 @@ function renderCanvas2()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / data.values.length;
+    var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        temp = data.values[i].CPUTemp;
+        temp = json.data.values[i].CPUTemp;
         scaledTemp = (temp * graphMax) / 100;
         tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
         tmpHeight = ((scaledTemp * graphFactor)).toFixed();
@@ -94,14 +95,15 @@ function renderCanvas2()
             context.fillStyle = "#" + (~~scaledTemp).toString(16) + (255 - (~~scaledTemp)).toString(16) + "00";
         }
         
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
         context.fillText(~~temp + "C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas3()
+function renderCanvas3(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgping");
     
@@ -114,12 +116,12 @@ function renderCanvas3()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / dailydata.values.length;
+    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < dailydata.values.length; i++)
+    for(var i = 0; i < json.dailydata.values.length; i++)
     {
-        ping = dailydata.values[i].AVGPing;
+        ping = json.dailydata.values[i].AVGPing;
         tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
         tmpHeight = ((ping * graphFactor)).toFixed();
 
@@ -135,14 +137,15 @@ function renderCanvas3()
             context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
         }
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
         context.fillText(~~ping + "ms", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas4()
+function renderCanvas4(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtemp");
     
@@ -155,12 +158,12 @@ function renderCanvas4()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / dailydata.values.length;
+    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < dailydata.values.length; i++)
+    for(var i = 0; i < json.dailydata.values.length; i++)
     {
-        temp = dailydata.values[i].AVGCPUTemp;
+        temp = json.dailydata.values[i].AVGCPUTemp;
         scaledTemp = (temp * graphMax) / 100;
         tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
         tmpHeight = ((scaledTemp * graphFactor)).toFixed();
@@ -177,14 +180,15 @@ function renderCanvas4()
             context.fillStyle = "#" + (~~scaledTemp).toString(16) + (255 - (~~scaledTemp)).toString(16) + "00";
         }
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
 
         context.fillStyle = graphTextcolor;
         context.fillText(~~temp + "C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas5()
+function renderCanvas5(json)
 {
     canvas = document.getElementById("canvas_diagramm_varping");
     
@@ -201,12 +205,12 @@ function renderCanvas5()
         variance[i] = 0;
     }
     
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        if(data.values[i].Ping > 255)
+        if(json.data.values[i].Ping > 255)
             variance[255]++;
         else
-            variance[~~(data.values[i].Ping)]++;
+            variance[~~(json.data.values[i].Ping)]++;
     }
     
     var graphMax = 100;
@@ -225,11 +229,12 @@ function renderCanvas5()
 
         context.fillStyle = "#FF6600";
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
     }
 }
 
-function renderCanvas6()
+function renderCanvas6(json)
 {
     canvas = document.getElementById("canvas_diagramm_vartemp");
     
@@ -246,12 +251,12 @@ function renderCanvas6()
         variance[i] = 0;
     }
     
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        if(data.values[i].CPUTemp > 100)
+        if(json.data.values[i].CPUTemp > 100)
             variance[100]++;
         else
-            variance[~~data.values[i].CPUTemp]++;
+            variance[~~json.data.values[i].CPUTemp]++;
     }
     
     var graphMax = 100;
@@ -270,11 +275,12 @@ function renderCanvas6()
 
         context.fillStyle = "#FF6600";
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
     }
 }
 
-function renderCanvas7()
+function renderCanvas7(json)
 {
     canvas = document.getElementById("canvas_diagramm_ram");
     
@@ -287,12 +293,12 @@ function renderCanvas7()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / data.values.length;
+    var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        ram = data.values[i].RAM;
+        ram = json.data.values[i].RAM;
         scaledRam = (ram * graphMax) / 1024;
         tmpTop = (canvasHeight - (graphFactor * scaledRam)).toFixed() - graphPadding;
         tmpHeight = ((scaledRam * graphFactor)).toFixed();
@@ -309,14 +315,17 @@ function renderCanvas7()
             context.fillStyle = "#" + (~~scaledRam).toString(16) + (255 - (~~scaledRam)).toString(16) + "00";
         }
         
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
-        context.fillText(~~ram + "MB", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~ram + "MB", 
+                        graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, 
+                        canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas8()
+function renderCanvas8(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgram");
     
@@ -329,12 +338,12 @@ function renderCanvas8()
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / dailydata.values.length;
+    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
     var graphTextcolor = "#000000";
 
-    for(var i = 0; i < dailydata.values.length; i++)
+    for(var i = 0; i < json.dailydata.values.length; i++)
     {
-        ram = dailydata.values[i].AVGRAM;
+        ram = json.dailydata.values[i].AVGRAM;
         scaledRam = (ram * graphMax) / 1024;
         tmpTop = (canvasHeight - (graphFactor * scaledRam)).toFixed() - graphPadding;
         tmpHeight = ((scaledRam * graphFactor)).toFixed();
@@ -351,14 +360,17 @@ function renderCanvas8()
             context.fillStyle = "#" + (~~scaledRam).toString(16) + (255 - (~~scaledRam)).toString(16) + "00";
         }
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
 
         context.fillStyle = graphTextcolor;
-        context.fillText(~~ram + "MB", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~ram + "MB", 
+            graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, 
+            canvasHeight - 2, graphWidth);
     }
 }
 
-function renderCanvas9()
+function renderCanvas9(json)
 {
     canvas = document.getElementById("canvas_diagramm_varram");
     
@@ -375,12 +387,12 @@ function renderCanvas9()
         variance[i] = 0;
     }
     
-    for(var i = 0; i < data.values.length; i++)
+    for(var i = 0; i < json.data.values.length; i++)
     {
-        if(data.values[i].RAM > 1024)
+        if(json.data.values[i].RAM > 1024)
             variance[1024]++;
         else
-            variance[~~data.values[i].RAM]++;
+            variance[~~json.data.values[i].RAM]++;
     }
     
     var graphMax = 100;
@@ -399,6 +411,7 @@ function renderCanvas9()
 
         context.fillStyle = "#FF6600";
 
-        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, tmpTop, graphWidth - graphPadding, tmpHeight);
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
     }
 }
