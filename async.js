@@ -6,15 +6,17 @@ function asyncReload()
         
         json = result.responseJSON;
         
-        renderCanvas1(json);
-        renderCanvas2(json);
-        renderCanvas3(json);
-        renderCanvas4(json);
-        renderCanvas5(json);
-        renderCanvas6(json);
-        renderCanvas7(json);
-        renderCanvas8(json);
-        renderCanvas9(json);
+        renderCanvasPings(json);
+        renderCanvasTemps(json);
+        renderCanvasMemory(json);
+        
+        renderCanvasAvgPings(json);
+        renderCanvasAvgTemps(json);
+        renderCanvasAvgMemory(json);
+        
+        renderCanvasVarPings(json);
+        renderCanvasVarTemps(json);
+        renderCanvasVarMemory(json);
         
         $('#pingstatsTable tr').remove();
         $('#tempstatsTable tr').remove();
@@ -77,6 +79,7 @@ function asyncReload()
         
         $('#datacount').text(json.datacount);
         $('#uptime').text(json.uptime);
+        $("#kernelVersion").text(json.kernel);
         
         var date = new Date();
         hours = date.getHours();

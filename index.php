@@ -24,7 +24,8 @@
                     Uptime: <span id="uptime"></span><br>
                     This site uses one cookie to remember which tab page you
                     used on your last visit.<br>
-                    last refresh: <span id="lastRefresh"></span>
+                    last refresh: <span id="lastRefresh"></span><br>
+                    Kernel: <span id="kernelVersion"></span>
                 </p>
             </div>
         </div>

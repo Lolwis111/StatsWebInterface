@@ -75,7 +75,8 @@
         }
     }
     echo "]},";
-    echo '"uptime":' . '"' . substr(exec("uptime -p"), 3) . '"}';
+    echo '"uptime":' . '"' . substr(exec("uptime -p"), 3) . '",';
+    echo '"kernel":' . '"' . exec("uname -r") . '"}';
 
     mysql_close($link);
 
