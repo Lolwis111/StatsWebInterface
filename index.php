@@ -12,12 +12,15 @@
         <script type="text/javascript" src="async.js" ></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>window.setInterval(asyncReload, 5 * 60 * 1000);</script>
+        
         <div id="header">
+            
             <div class="floater" id="infotables">
                 <table class="minmaxTable" id="pingstatsTable" border="1"></table>
                 <table class="minmaxTable" id="tempstatsTable" border="1"></table>
                 <table class="minmaxTable" id="ramstatsTable" border="1"></table>
             </div>
+            
             <div class="floater" id="infotext">
                 <p>
                     <span id="datacount"></span> entries available.<br>
@@ -28,15 +31,31 @@
                     Kernel: <span id="kernelVersion"></span>
                 </p>
             </div>
+            
+            <div class="floater">
+                <button id="phpmyadmin_button" onclick="phpMyAdmin();">
+                    PHPMyAdmin
+                </button>
+                <br>
+                <button id="reload_button" onclick="asyncReload()">
+                    Refresh
+                </button>
+            </div>
+            
         </div>
+        
         <hr>
-        <button id="reload_button" onclick="asyncReload()">Refresh</button>
+        
         <br>
+        
         <div id="body">
+            
             <div id="left_table" class="floater">
                 <table id="statsTable" border="1"></table>
             </div>
+            
             <div id="right_graph" class="floater">
+                
                 <div class="tab_menu">
                     <button class="tab_button" id="BtnPings" onclick="openTab('Pings')">Pings</button>
                     <button class="tab_button" id="BtnTemps" onclick="openTab('Temps')">Temperatures</button>
@@ -53,6 +72,7 @@
                     Distribution of Pings<br>
                     <canvas id="canvas_diagramm_varping"></canvas>
                 </div>
+                
                 <div id="Temps" class="tabpage" style="display: none;">
                     CPU temperatures between <span class="dateTimeRange"></span><br>
                     <canvas id="canvas_diagramm_temp" ></canvas>
@@ -63,6 +83,7 @@
                     Distribution of Temperatures<br>
                     <canvas id="canvas_diagramm_vartemp"></canvas>
                 </div>
+                
                 <div id="RAM" class="tabpage" style="display: none;">
                     RAM usage between <span class="dateTimeRange"></span><br>
                     <canvas id="canvas_diagramm_ram" ></canvas>

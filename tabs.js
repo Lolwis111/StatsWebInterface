@@ -24,18 +24,23 @@ function openTab(tab)
     
     for(var index = 0; index < tabButtons.length; index++)
     {
-        tabButtons[index].style.color = "black";
-        tabButtons[index].style.backgroundColor = "white";
-        tabButtons[index].style.border = "1px solid black";
+        tabButtons[index].style.color = "#202020";
+        tabButtons[index].style.backgroundColor = "#CCCCCC";
+        tabButtons[index].style.border = "1px solid #CCCCCC";
     }
     
     document.getElementById(tab).style.display = "block";
     
     var button = document.getElementById("Btn" + tab);
     
-    button.style.color = "white";
-    button.style.backgroundColor = "black";
-    button.style.border = "1px solid white;";
+    button.style.color = "#CCCCCC";
+    button.style.backgroundColor = "#202020";
+    button.style.border = "1px solid #202020;";
     
     setCookie("tabpage", tab, 7);
+}
+
+function phpMyAdmin()
+{
+    window.location.href = "http://192.168.178.56/phpmyadmin/";
 }

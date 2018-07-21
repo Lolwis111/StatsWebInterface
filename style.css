@@ -4,6 +4,12 @@
     margin: 0;
 }
 
+html
+{
+    color: #CCCCCC;
+    background-color: #202020;
+}
+
 #header
 {
     margin: 10px;
@@ -24,20 +30,28 @@
 .tab_menu
 {
     width: 100%;
-    border: 1px solid black;
+    border: 1px solid #202020;
     border-radius: 4px;
     padding: 2px;
 }
 
-.tab_button
+#BtnPings, #BtnTemps, #BtnRAM
 {
     width: 150px;
-    background-color: white;
-    color: black;
-    border: none;
+    background-color: #202020;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
     padding: 8px 16px;
     text-align: center;
     vertical-align: middle;
+    margin: 5px;
+    margin-left: 10px;
+}
+
+#BtnPings:hover, #BtnTemps:hover, #BtnRAM:hover
+{
+    background-color: #CCCCCC;
+    color: #202020;
 }
 
 #body
@@ -45,29 +59,23 @@
     float: none;
 }
 
-#reload_button
+#reload_button, #phpmyadmin_button
 {
     width: 320px;
-    background-color: white;
-    color: black;
-    border: 1px solid black;
+    background-color: #202020;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
     padding: 8px 16px;
     text-align: center;
     vertical-align: middle;
     margin: 5px;
     margin-left: 10px;
-    float: none;
-}
-#reload_button:hover
-{
-    background-color: black;
-    color: white;
 }
 
-.tab_button:hover
+#reload_button:hover, #phpmyadmin_button:hover
 {
-    background-color: black;
-    color: white;
+    background-color: #CCCCCC;
+    color: #202020;
 }
 
 .minmaxTable
@@ -82,6 +90,11 @@
     line-height: 1cm;
 }
 
+#updates
+{
+    margin-left: 5px;
+}
+
 #right_graph
 {
     margin-left: 5px;
@@ -89,7 +102,7 @@
 
 .tabpage
 {
-    border: 1px solid black;
+    border: 1px solid #202020;
     border-radius: 4px;
     padding: 2px;
     width: 100%;
@@ -97,7 +110,7 @@
 
 canvas
 {
-    border: 1px solid #E65858;
+    border: 1px solid #CCCCCC;
     border-radius:4px;
 }
 

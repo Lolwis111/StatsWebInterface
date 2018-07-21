@@ -1,57 +1,91 @@
 <?php
-    $link = mysql_connect("localhost", "loguser", "Galm34..") or die(mysql_error());
 
-    $data = mysql_select_db("logger", $link) or die(mysql_error());
-    $query = "SELECT COUNT(`ID`) as datacount, ROUND(MAX(`Ping`), 3) as maxping, ROUND(MIN(`Ping`), 3) as minping, ROUND(AVG(`Ping`), 3) as avgping FROM `logs`;";
-            
-    $result = mysql_query($query, $link) or die(mysql_error());
+    include 'sql.php';
+
+    // error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
+
+    // open up the connection
+    $mysqli = new mysqli($sqlServer['server'], 
+            $sqlServer['username'], 
+            $sqlServer['password'], 
+            $sqlServer['database']);
+
+    // check if that worked
+    if($mysqli->connect_errno)
+    {
+        echo "Sorry, this website is experiencing problems.";
+        echo "Error: Failed to make a MySQL connection, here is why: \n";
+        echo "Errno: " . $mysqli->connect_errno . "\n";
+        echo "Error: " . $mysqli->connect_error . "\n";
+    
+        exit;
+    }
+
+    // select stats of ping
+    $query = "SELECT COUNT(`ID`) as datacount,"
+            . "ROUND(MAX(`Ping`), 3) as maxping," 
+            . "ROUND(MIN(`Ping`), 3) as minping, "
+            . "ROUND(AVG(`Ping`), 3) as avgping FROM `logs`;";
                 
-    if($row = mysql_fetch_array($result))
+    $result = querySql($query, $mysqli);
+
+    if($row = $result->fetch_assoc())
     {
-        echo '{"pingstats":{"min":' . $row["minping"] . ',"max":' . $row["maxping"] . ',"avg":' . $row["avgping"] . '},"datacount":' . $row["datacount"] . ',';
+        echo '{"pingstats":{"min":' . $row["minping"] 
+                    . ',"max":' . $row["maxping"] 
+                    . ',"avg":' . $row["avgping"] 
+                    . '},"datacount":' . $row["datacount"] . ',';
     }
             
-    $query = "SELECT ROUND(MAX(`CPUTemp`), 3) as maxcpu, ROUND(MIN(`CPUTemp`), 3) as mincpu, ROUND(AVG(`CPUTemp`), 3) as avgcpu FROM `logs`;";
+    // select stats of temp
+    $query = "SELECT ROUND(MAX(`CPUTemp`), 3) as maxcpu,"
+            . "ROUND(MIN(`CPUTemp`), 3) as mincpu,"
+            . "ROUND(AVG(`CPUTemp`), 3) as avgcpu FROM `logs`;";
             
-    $result = mysql_query($query, $link) or die(mysql_error());
-            
-    if($row = mysql_fetch_array($result))
+    $result = querySql($query, $mysqli);
+
+    if($row = $result->fetch_assoc())
     {
-        echo '"tempstats":{"min":' . $row["mincpu"] . ',"max":' . $row["maxcpu"] . ',"avg":' . $row["avgcpu"] . '},';
+        echo '"tempstats":{"min":' . $row["mincpu"] 
+                    . ',"max":' . $row["maxcpu"] 
+                    . ',"avg":' . $row["avgcpu"] . '},';
     }
 
-    $query = "SELECT ROUND(MAX(`UsedRAM`), 3) as maxram, ROUND(MIN(`UsedRAM`), 3) as minram, ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs` WHERE `UsedRAM` > 0;";
+    // select stats of ram
+    $query = "SELECT ROUND(MAX(`UsedRAM`), 3) as maxram,"
+            . "ROUND(MIN(`UsedRAM`), 3) as minram,"            
+            . "ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs`"
+            . "WHERE `UsedRAM` > 0;";
             
-    $result = mysql_query($query, $link) or die(mysql_error());
+    $result = querySql($query, $mysqli);
             
-    if($row = mysql_fetch_array($result))
+    if($row = $result->fetch_assoc())
     {
-        echo '"ramstats":{"min":' . $row["minram"] . ',"max":' . $row["maxram"] . ',"avg":' . $row["avgram"]. '},';
+        echo '"ramstats":{"min":' . $row["minram"] 
+                    . ',"max":' . $row["maxram"] 
+                    . ',"avg":' . $row["avgram"]. '},';
     }
+    
+    
+    // query the raw data here
     echo '"data":{"values":[';
-    $where = "";
-                
-    if(isset($_GET["date"]) && !empty($_GET["date"]))
-    {
-        $date = mysql_real_escape_string($_GET["date"]);
+        
+    $where = parseDate();
+    $query = "SELECT `Date`,`Time`,`Ping`,`CPUTemp`,`UsedRAM` FROM `logs`"
+            . "{$where} ORDER BY `Date` DESC, `Time` DESC LIMIT 48;";
             
-        if(isset($_GET["am"]))
-        {
-            $where = "WHERE `Date` = '{$date}' AND `Time` <= '12:00:05'";
-        }
-        else if(isset($_GET["pm"]))
-        {
-            $where = "WHERE `Date` = '{$date}' AND `Time` > '12:00:05'";
-        }
-    }
-        
-    $query = "SELECT `Date`,`Time`,`Ping`,`CPUTemp`,`UsedRAM` FROM `logs` {$where} ORDER BY `Date` DESC, `Time` DESC LIMIT 48;";
-    $result = mysql_query($query, $link) or die(mysql_error());
-    $rows = mysql_num_rows($result);
+    $result = querySql($query, $mysqli);
+
+    // Build a new json object for each selected row
+    $rows = $result->num_rows;
     for($i = 0; $i < $rows; $i++)
     {
-        $row = mysql_fetch_array($result);
-        echo '{"DateTime":"' . $row["Date"] . ' ' . $row["Time"] . '", "Ping":' . $row["Ping"] . ',"CPUTemp":' . $row["CPUTemp"] . ',"RAM":' . $row["UsedRAM"] . '}';
+        $row = $result->fetch_assoc();
+        echo '{"DateTime":"' . $row["Date"] . ' ' . $row["Time"] 
+                . '", "Ping":' . $row["Ping"] 
+                . ',"CPUTemp":' . $row["CPUTemp"] 
+                . ',"RAM":' . $row["UsedRAM"] . '}';
                 
         if($i < $rows - 1)
         {
@@ -59,15 +93,24 @@
         }
     }
     echo "]},";
+    
+    // select the daily averages
+    $query = "SELECT `Date`, ROUND(AVG(`Ping`), 3) as avgping," 
+            . "ROUND(AVG(`CPUTemp`), 3) as avgtemp,"
+            . "ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs`"
+            . "GROUP BY `Date` ORDER BY `Date` DESC LIMIT 12;";
+            
+    $result = querySql($query, $mysqli);
 
-    $query = "SELECT `Date`, ROUND(AVG(`Ping`), 3) as avgping, ROUND(AVG(`CPUTemp`), 3) as avgtemp, ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs` GROUP BY `Date` ORDER BY `Date` DESC LIMIT 12;";
-    $result = mysql_query($query, $link) or die(mysql_error());
     echo '"dailydata":{"values":[';
-    $rows = mysql_num_rows($result);
+    $rows = $result->num_rows;
     for($i = 0; $i < $rows; $i++)
     {
-        $row = mysql_fetch_array($result);
-        echo '{"Date":"' . $row["Date"] . '","AVGPing":' . $row["avgping"] . ',"AVGCPUTemp":' . $row["avgtemp"] . ',"AVGRAM":' . $row["avgram"] . '}';
+        $row = $result->fetch_assoc();
+        echo '{"Date":"' . $row["Date"] 
+                . '","AVGPing":' . $row["avgping"] 
+                . ',"AVGCPUTemp":' . $row["avgtemp"] 
+                . ',"AVGRAM":' . $row["avgram"] . '}';
         
         if($i < $rows - 1)
         {
@@ -75,9 +118,11 @@
         }
     }
     echo "]},";
+    
+    // add some system information
     echo '"uptime":' . '"' . substr(exec("uptime -p"), 3) . '",';
     echo '"kernel":' . '"' . exec("uname -r") . '"}';
 
-    mysql_close($link);
-
+    $result->free();
+    $mysqli->close();
 ?>
