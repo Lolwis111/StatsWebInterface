@@ -6,11 +6,11 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body onload="initTabs();asyncReload();">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" src="canvas.js" ></script>
         <script type="text/javascript" src="tabs.js" ></script>
         <script type="text/javascript" src="cookies.js" ></script>
         <script type="text/javascript" src="async.js" ></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script>window.setInterval(asyncReload, 5 * 60 * 1000);</script>
         
         <div id="header">
@@ -63,7 +63,7 @@
                 </div>
                 
                 <div id="Pings" class="tabpage">
-                    Ping RTTs between <span class="dateTimeRange"></span><br>
+                    Ping<sup>(1)</sup> RTTs between <span class="dateTimeRange"></span><br>
                     <canvas id="canvas_diagramm_ping"></canvas>
                     <br>
                     Average Ping RTT last <span class="dailyDataLength"></span> days<br>
@@ -71,6 +71,13 @@
                     <br>
                     Distribution of Pings<br>
                     <canvas id="canvas_diagramm_varping"></canvas>
+                    <br>
+                    Average Ping RTT on day weeks<br>
+                    <canvas id="canvas_diagramm_avgpingdow"></canvas>
+                    <br>
+                    <sup>(1)</sup>Average RTT of ICMP Ping to 8.8.8.8 (Google DNS)
+                    <br>
+                    <!-- <table class="minmaxTable" id="weekdayPings" border="1"></table> -->
                 </div>
                 
                 <div id="Temps" class="tabpage" style="display: none;">

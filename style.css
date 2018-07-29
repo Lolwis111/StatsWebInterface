@@ -33,25 +33,20 @@ html
     border: 1px solid #202020;
     border-radius: 4px;
     padding: 2px;
+    overflow-wrap: break-word;
 }
 
-#BtnPings, #BtnTemps, #BtnRAM
+.tab_button
 {
-    width: 150px;
+    width: 130px;
     background-color: #202020;
     color: #CCCCCC;
     border: 1px solid #CCCCCC;
     padding: 8px 16px;
     text-align: center;
     vertical-align: middle;
-    margin: 5px;
+    margin: 2px;
     margin-left: 10px;
-}
-
-#BtnPings:hover, #BtnTemps:hover, #BtnRAM:hover
-{
-    background-color: #CCCCCC;
-    color: #202020;
 }
 
 #body
@@ -111,7 +106,8 @@ html
 canvas
 {
     border: 1px solid #CCCCCC;
-    border-radius:4px;
+    border-radius: 4px;
+    width: auto;
 }
 
 td

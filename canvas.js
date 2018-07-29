@@ -1,7 +1,15 @@
-var canvasHeight = 370;
+var canvasHeight = 320;
 var smallCanvasHeight = 100;
-var bigCanvasWidth = 1400;
+var bigCanvasWidth = 250;
 var smallCanvasWidth = bigCanvasWidth;
+
+var graphTextcolor = "#DBDBDB";
+
+function initCanvas()
+{
+    bigCanvasWidth = $(document).width() - $('#left_table').width() - 25;
+    smallCanvasWidth = bigCanvasWidth;
+}
 
 function renderGrid(context, width)
 {
@@ -32,7 +40,6 @@ function renderCanvasPings(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.data.values.length; i++)
     {
@@ -74,7 +81,6 @@ function renderCanvasTemps(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.data.values.length; i++)
     {
@@ -117,7 +123,6 @@ function renderCanvasMemory(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (bigCanvasWidth - graphPadding) / json.data.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.data.values.length; i++)
     {
@@ -162,7 +167,6 @@ function renderCanvasAvgPings(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.dailydata.values.length; i++)
     {
@@ -190,6 +194,48 @@ function renderCanvasAvgPings(json)
     }
 }
 
+function renderCanvasAvgPingsDOW(json)
+{
+    canvas = document.getElementById("canvas_diagramm_avgpingdow");
+    
+    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('height', canvasHeight.toFixed());
+    context = canvas.getContext("2d");
+    
+    renderGrid(context, smallCanvasWidth);
+    
+    var graphMax = 255;
+    var graphPadding = 10;
+    var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
+    var graphWidth = (smallCanvasWidth - graphPadding) / 7;
+
+    for(var i = 0; i < 7; i++)
+    {
+        ping = json.weekdaydata.values[i].AVGPing;
+        tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
+        tmpHeight = ((ping * graphFactor)).toFixed();
+
+        if(ping > 255)
+        {
+            // red
+            context.fillStyle = "#FF0000";
+        }
+        else 
+        {
+            // the value goes from the 0-255, where 0 is represented as green and 255 as red
+            // the formula makes a smooth color transition, depending on the value
+            context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
+        }
+
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
+        
+        context.fillStyle = graphTextcolor;
+        var text = json.weekdaydata.values[i].WeekDay + " (" + ~~ping + "ms)";
+        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+    }
+}
+
 function renderCanvasAvgTemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtemp");
@@ -204,7 +250,6 @@ function renderCanvasAvgTemps(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.dailydata.values.length; i++)
     {
@@ -262,7 +307,6 @@ function renderCanvasVarPings(json)
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < variance.length; i++)
     {
@@ -308,7 +352,6 @@ function renderCanvasVarMemory(json)
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < variance.length; i++)
     {
@@ -354,7 +397,6 @@ function renderCanvasVarTemps(json)
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < variance.length; i++)
     {
@@ -385,7 +427,6 @@ function renderCanvasAvgMemory(json)
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / json.dailydata.values.length;
-    var graphTextcolor = "#000000";
 
     for(var i = 0; i < json.dailydata.values.length; i++)
     {

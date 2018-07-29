@@ -119,6 +119,33 @@
     }
     echo "]},";
     
+    // select the daily ping averages by day of week
+    $query = "SELECT DAYNAME(`Date`) as weekday,"
+            . "ROUND(MAX(`Ping`), 3) as maxping," 
+            . "ROUND(MIN(`Ping`), 3) as minping, "
+            . "ROUND(AVG(`Ping`), 3) as avgping FROM `logs`"
+            . "GROUP BY DAYNAME(`Date`)"
+            . "ORDER BY DAYOFWEEK(`Date`)";
+            
+    $result = querySql($query, $mysqli);
+
+    echo '"weekdaydata":{"values":[';
+    $rows = $result->num_rows;
+    for($i = 0; $i < $rows; $i++)
+    {
+        $row = $result->fetch_assoc();
+        echo '{"WeekDay":"' . $row["weekday"]
+                . '","MinPing":' . $row["minping"] 
+                . ',"MaxPing":' . $row["maxping"] 
+                . ',"AVGPing":' . $row["avgping"] . '}';
+        
+        if($i < $rows - 1)
+        {
+            echo ",";
+        }
+    }
+    echo "]},";
+    
     // add some system information
     echo '"uptime":' . '"' . substr(exec("uptime -p"), 3) . '",';
     echo '"kernel":' . '"' . exec("uname -r") . '"}';

@@ -6,18 +6,6 @@ function asyncReload()
         
         json = result.responseJSON;
         
-        renderCanvasPings(json);
-        renderCanvasTemps(json);
-        renderCanvasMemory(json);
-        
-        renderCanvasAvgPings(json);
-        renderCanvasAvgTemps(json);
-        renderCanvasAvgMemory(json);
-        
-        renderCanvasVarPings(json);
-        renderCanvasVarTemps(json);
-        renderCanvasVarMemory(json);
-        
         $('#pingstatsTable tr').remove();
         $('#tempstatsTable tr').remove();
         $('#ramstatsTable tr').remove();
@@ -55,8 +43,8 @@ function asyncReload()
         $('#statsTable tr').remove();
         
         $('#statsTable').append(
-            "<tr><th>Date and Time</th><th>Ping to 8.8.8.8</th>"
-            + "<th>CPU Temperature</th><th>RAM Usage</th></tr>"
+            "<tr><th>Date  Time</th><th>Ping<sup>(1)</sup></th>"
+            + "<th>CPU Temp</th><th>RAM</th></tr>"
         );
     
         for(i = 0; i < json.data.values.length; i++)
@@ -68,6 +56,23 @@ function asyncReload()
                 + "<td>" + json.data.values[i].RAM + " MB</td></tr>"
             );
         }
+        
+        /* $('#weekdayPings tr').remove();
+        
+        $('#weekdayPings').append(
+            "<tr><th>Day of week</th><th>Min Ping</th>"
+            + "<th>Max Ping</th><th>Avg Ping</th></tr>"
+        );
+    
+        for(i = 0; i < json.weekdaydata.values.length; i++)
+        {
+            $('#weekdayPings').append(
+                "<tr><td>" + json.weekdaydata.values[i].WeekDay + "</td>"
+                + "<td>" + json.weekdaydata.values[i].MinPing + " ms</td>"
+                + "<td>" + json.weekdaydata.values[i].MaxPing + " ms</td>"
+                + "<td>" + json.weekdaydata.values[i].AVGPing + " ms</td></tr>"
+            );
+        }*/
         
         $('.dateTimeRange').text(
             json.data.values[json.data.values.length - 1].DateTime 
@@ -93,5 +98,20 @@ function asyncReload()
             + ':'
             + (seconds < 10 ? '0' + seconds : seconds)
         );
+        
+        initCanvas();
+        
+        renderCanvasPings(json);
+        renderCanvasTemps(json);
+        renderCanvasMemory(json);
+        
+        renderCanvasAvgPings(json);
+        renderCanvasAvgPingsDOW(json);
+        renderCanvasAvgTemps(json);
+        renderCanvasAvgMemory(json);
+        
+        renderCanvasVarPings(json);
+        renderCanvasVarTemps(json);
+        renderCanvasVarMemory(json);
     });
 }
