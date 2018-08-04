@@ -7,10 +7,12 @@
     </head>
     <body onload="initTabs();asyncReload();">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script type="text/javascript" src="canvas.js" ></script>
-        <script type="text/javascript" src="tabs.js" ></script>
-        <script type="text/javascript" src="cookies.js" ></script>
-        <script type="text/javascript" src="async.js" ></script>
+        <script type="text/javascript" src="scripts/canvas.js" ></script>
+        <script type="text/javascript" src="scripts/tabs.js" ></script>
+        <script type="text/javascript" src="scripts/cookies.js" ></script>
+        <script type="text/javascript" src="scripts/async.js" ></script>
+        
+        <!-- refresh every 5 minutes via ajax -->
         <script>window.setInterval(asyncReload, 5 * 60 * 1000);</script>
         
         <div id="header">
@@ -33,12 +35,16 @@
             </div>
             
             <div class="floater">
-                <button id="phpmyadmin_button" onclick="phpMyAdmin();">
+                <button id="phpmyadmin_button" class="navbutton" onclick="phpMyAdmin();">
                     PHPMyAdmin
                 </button>
                 <br>
-                <button id="reload_button" onclick="asyncReload()">
+                <button id="reload_button" class="navbutton" onclick="asyncReload()'">
                     Refresh
+                </button>
+                <br>
+                <button id="homeservice_button" class="navbutton" onclick="homeService();">
+                    Home Service
                 </button>
             </div>
             
@@ -77,7 +83,6 @@
                     <br>
                     <sup>(1)</sup>Average RTT of ICMP Ping to 8.8.8.8 (Google DNS)
                     <br>
-                    <!-- <table class="minmaxTable" id="weekdayPings" border="1"></table> -->
                 </div>
                 
                 <div id="Temps" class="tabpage" style="display: none;">
@@ -89,6 +94,9 @@
                     <br>
                     Distribution of Temperatures<br>
                     <canvas id="canvas_diagramm_vartemp"></canvas>
+                    <br>
+                    Average CPU Temperature by month<br>
+                    <canvas id="canvas_diagramm_avgtempmonth"></canvas>
                 </div>
                 
                 <div id="RAM" class="tabpage" style="display: none;">

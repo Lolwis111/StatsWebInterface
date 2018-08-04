@@ -44,3 +44,8 @@ function phpMyAdmin()
 {
     window.location.href = "http://192.168.178.56/phpmyadmin/";
 }
+
+function homeService()
+{
+    window.location.href = "http://192.168.178.56/homeService/";
+}

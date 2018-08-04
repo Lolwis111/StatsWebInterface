@@ -57,23 +57,6 @@ function asyncReload()
             );
         }
         
-        /* $('#weekdayPings tr').remove();
-        
-        $('#weekdayPings').append(
-            "<tr><th>Day of week</th><th>Min Ping</th>"
-            + "<th>Max Ping</th><th>Avg Ping</th></tr>"
-        );
-    
-        for(i = 0; i < json.weekdaydata.values.length; i++)
-        {
-            $('#weekdayPings').append(
-                "<tr><td>" + json.weekdaydata.values[i].WeekDay + "</td>"
-                + "<td>" + json.weekdaydata.values[i].MinPing + " ms</td>"
-                + "<td>" + json.weekdaydata.values[i].MaxPing + " ms</td>"
-                + "<td>" + json.weekdaydata.values[i].AVGPing + " ms</td></tr>"
-            );
-        }*/
-        
         $('.dateTimeRange').text(
             json.data.values[json.data.values.length - 1].DateTime 
             + " and " 
@@ -108,6 +91,7 @@ function asyncReload()
         renderCanvasAvgPings(json);
         renderCanvasAvgPingsDOW(json);
         renderCanvasAvgTemps(json);
+        renderCanvasAvgTempsMonth(json);
         renderCanvasAvgMemory(json);
         
         renderCanvasVarPings(json);

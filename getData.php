@@ -125,7 +125,7 @@
             . "ROUND(MIN(`Ping`), 3) as minping, "
             . "ROUND(AVG(`Ping`), 3) as avgping FROM `logs`"
             . "GROUP BY DAYNAME(`Date`)"
-            . "ORDER BY DAYOFWEEK(`Date`)";
+            . "ORDER BY WEEKDAY(`Date`)";
             
     $result = querySql($query, $mysqli);
 
@@ -138,6 +138,33 @@
                 . '","MinPing":' . $row["minping"] 
                 . ',"MaxPing":' . $row["maxping"] 
                 . ',"AVGPing":' . $row["avgping"] . '}';
+        
+        if($i < $rows - 1)
+        {
+            echo ",";
+        }
+    }
+    echo "]},";
+    
+    // select the monthly temp averages
+    $query = "SELECT MONTHNAME(`Date`) as month,"
+            . "ROUND(MAX(`CPUTemp`), 3) as maxtemp," 
+            . "ROUND(MIN(`CPUTemp`), 3) as mintemp, "
+            . "ROUND(AVG(`CPUTemp`), 3) as avgtemp FROM `logs`"
+            . "GROUP BY MONTHNAME(`Date`)"
+            . "ORDER BY MONTH(`Date`)";
+            
+    $result = querySql($query, $mysqli);
+    
+    echo '"monthlydata":{"values":[';
+    $rows = $result->num_rows;
+    for($i = 0; $i < $rows; $i++)
+    {
+        $row = $result->fetch_assoc();
+        echo '{"Month":"' . $row["month"]
+                . '","MinTemp":' . $row["mintemp"] 
+                . ',"MaxTemp":' . $row["maxtemp"] 
+                . ',"AVGTemp":' . $row["avgtemp"] . '}';
         
         if($i < $rows - 1)
         {

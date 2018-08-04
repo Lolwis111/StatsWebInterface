@@ -54,7 +54,7 @@ html
     float: none;
 }
 
-#reload_button, #phpmyadmin_button
+.navbutton
 {
     width: 320px;
     background-color: #202020;
@@ -67,7 +67,7 @@ html
     margin-left: 10px;
 }
 
-#reload_button:hover, #phpmyadmin_button:hover
+.navbutton:hover
 {
     background-color: #CCCCCC;
     color: #202020;

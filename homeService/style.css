@@ -1,0 +1,32 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+#wrapper
+{
+    margin: 20px;
+}
+
+.caller
+{
+    width: 350px;
+    height: 75px;
+    background-color: #CCCCCC;
+    color: #202020;
+    border: 1px solid #202020;
+    padding: 8px 16px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 2px;
+    margin-left: 10px;
+}
+
+.caller:hover
+{
+    background-color: #202020;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+}

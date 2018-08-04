@@ -11,6 +11,10 @@ function initCanvas()
     smallCanvasWidth = bigCanvasWidth;
 }
 
+/**
+ * This function renders the horizontal lines onto the canvas
+ * to make the diagramms appear more diagrammy
+ **/
 function renderGrid(context, width)
 {
     var graphGridSize = 20;
@@ -24,6 +28,40 @@ function renderGrid(context, width)
 
     context.strokeStyle = "#DBDBDB";
     context.stroke();
+}
+
+/**
+ * This function takes a value and creates an RGB-Color
+ * ranging from green to red, where 0 is a solid green
+ * and 255 a solid red. Values get clamped.s
+ **/
+function createColor(value)
+{
+    if(value > 255)
+    {
+        value = 255;
+    }
+    else if(value < 0)
+    {
+        value = 0;
+    }
+    
+    hex1 = (~~value).toString(16);
+    hex2 = (255 - (~~value)).toString(16);
+    
+    if(hex1 < 16)
+    {
+        hex1 = "0" + hex1;
+    }
+    
+    if(hex2 < 16)
+    {
+        hex2 = "0" + hex2;
+    }
+    
+    var color = "#" + hex1 + hex2 + "00";
+    
+    return color;
 }
 
 function renderCanvasPings(json)
@@ -47,17 +85,7 @@ function renderCanvasPings(json)
         tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
         tmpHeight = ((ping * graphFactor)).toFixed();
 
-        if(ping > 255)
-        {
-            // red
-            context.fillStyle = "#FF0000";
-        }
-        else 
-        {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
-        }
+        context.fillStyle = createColor(ping);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding + 2, tmpHeight);
@@ -89,17 +117,7 @@ function renderCanvasTemps(json)
         tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
         tmpHeight = ((scaledTemp * graphFactor)).toFixed();
         
-        if(scaledTemp > 255)
-        {
-            // red
-            context.fillStyle = "#FF0000";
-        }
-        else 
-        {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~scaledTemp).toString(16) + (255 - (~~scaledTemp)).toString(16) + "00";
-        }
+        context.fillStyle = createColor(scaledTemp);
         
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
@@ -133,14 +151,11 @@ function renderCanvasMemory(json)
         
         if(scaledRam > graphMax)
         {
-            // red
             context.fillStyle = "#FF0000";
         }
         else 
         {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~scaledRam).toString(16) + (255 - (~~scaledRam)).toString(16) + "00";
+            context.fillStyle = createColor(scaledRam);
         }
         
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
@@ -174,17 +189,7 @@ function renderCanvasAvgPings(json)
         tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
         tmpHeight = ((ping * graphFactor)).toFixed();
 
-        if(ping > 255)
-        {
-            // red
-            context.fillStyle = "#FF0000";
-        }
-        else 
-        {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
-        }
+        context.fillStyle = createColor(ping);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
@@ -196,43 +201,34 @@ function renderCanvasAvgPings(json)
 
 function renderCanvasAvgPingsDOW(json)
 {
+    var height = canvasHeight;
     canvas = document.getElementById("canvas_diagramm_avgpingdow");
     
     canvas.setAttribute('width', smallCanvasWidth.toFixed());
-    canvas.setAttribute('height', canvasHeight.toFixed());
+    canvas.setAttribute('height', height.toFixed());
     context = canvas.getContext("2d");
     
     renderGrid(context, smallCanvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
-    var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
+    var graphFactor = (height - (2 * graphPadding)) / graphMax;
     var graphWidth = (smallCanvasWidth - graphPadding) / 7;
 
     for(var i = 0; i < 7; i++)
     {
         ping = json.weekdaydata.values[i].AVGPing;
-        tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
+        tmpTop = (height - (graphFactor * ping)).toFixed() - graphPadding;
         tmpHeight = ((ping * graphFactor)).toFixed();
 
-        if(ping > 255)
-        {
-            // red
-            context.fillStyle = "#FF0000";
-        }
-        else 
-        {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~ping).toString(16) + (255 - (~~ping)).toString(16) + "00";
-        }
+        context.fillStyle = createColor(ping);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
         var text = json.weekdaydata.values[i].WeekDay + " (" + ~~ping + "ms)";
-        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, height - 2, graphWidth);
     }
 }
 
@@ -258,23 +254,47 @@ function renderCanvasAvgTemps(json)
         tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
         tmpHeight = ((scaledTemp * graphFactor)).toFixed();
 
-        if(scaledTemp > 255)
-        {
-            // red
-            context.fillStyle = "#FF0000";
-        }
-        else 
-        {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~scaledTemp).toString(16) + (255 - (~~scaledTemp)).toString(16) + "00";
-        }
+        context.fillStyle = createColor(scaledTemp);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
 
         context.fillStyle = graphTextcolor;
         context.fillText(~~temp + "C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+    }
+}
+
+function renderCanvasAvgTempsMonth(json)
+{
+    canvas = document.getElementById("canvas_diagramm_avgtempmonth");
+    
+    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('height', canvasHeight.toFixed());
+    context = canvas.getContext("2d");
+    
+    renderGrid(context, smallCanvasWidth);
+    
+    var graphMax = 255;
+    var graphPadding = 10;
+    var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
+    var graphWidth = (smallCanvasWidth - graphPadding) / json.monthlydata.values.length;
+
+    for(var i = 0; i < json.monthlydata.values.length; i++)
+    {
+        temp = json.monthlydata.values[i].AVGTemp;
+        scaledTemp = (temp * graphMax) / 100;
+        
+        tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
+        tmpHeight = ((scaledTemp * graphFactor)).toFixed();
+
+        context.fillStyle = createColor(scaledTemp);
+
+        context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
+                        tmpTop, graphWidth - graphPadding, tmpHeight);
+        
+        context.fillStyle = graphTextcolor;
+        var text = json.monthlydata.values[i].Month + " (" + ~~temp + "C)";
+        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
@@ -416,7 +436,7 @@ function renderCanvasVarTemps(json)
 function renderCanvasAvgMemory(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgram");
-    
+
     canvas.setAttribute('width', smallCanvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
@@ -437,14 +457,11 @@ function renderCanvasAvgMemory(json)
 
         if(scaledRam > graphMax)
         {
-            // red
             context.fillStyle = "#FF0000";
         }
         else 
         {
-            // the value goes from the 0-255, where 0 is represented as green and 255 as red
-            // the formula makes a smooth color transition, depending on the value
-            context.fillStyle = "#" + (~~scaledRam).toString(16) + (255 - (~~scaledRam)).toString(16) + "00";
+            context.fillStyle = createColor(scaledRam);
         }
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
