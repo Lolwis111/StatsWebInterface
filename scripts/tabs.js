@@ -1,3 +1,5 @@
+var currentTab;
+
 function initTabs()
 {
     var cookie = getCookie("tabpage");
@@ -14,6 +16,7 @@ function initTabs()
 
 function openTab(tab)
 {
+    currentTab = tab;
     var tabPages = document.getElementsByClassName("tabpage");
     var tabButtons = document.getElementsByClassName("tab_button");
     

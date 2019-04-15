@@ -29,8 +29,8 @@ with con:
         
             cur.execute(query)
         
-            # Name, Reason, Priority, Date, Time
-            msg = "Request,{0},{1},{2},{3},{4}".format(row[1], row[2], row[3], row[4].isoformat(), str(row[5]))
+            # ID,Name, Reason, Priority, Date, Time
+            msg = "Request,{0},{1},{2},{3},{4},{5}".format(row[0],row[1], row[2], row[3], row[4].isoformat(), str(row[5]))
 
             # print msg
 

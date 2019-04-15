@@ -3,7 +3,7 @@
         'server' => 'localhost', 
         'username' => 'loguser', 
         'password' => 'pylogpsw', 
-        'database' => 'logger'
+        'database' => 'logger',
     ];
     
     function querySql($query, $mysqli)

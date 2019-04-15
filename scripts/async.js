@@ -1,6 +1,6 @@
 function asyncReload()
 {
-    result = $.getJSON("getData.php", function(data, status, xhr)
+    result = $.getJSON("getDataLogs.php", function(data, status, xhr)
     {
         console.log(status);
         
@@ -25,9 +25,9 @@ function asyncReload()
         );
         
         $('#tempstatsTable').append(
-            "<tr><td>" + json.tempstats.min + "&deg;C</td><td>" 
-            + json.tempstats.max + "&deg;C</td><td>" 
-            + json.tempstats.avg + "&deg;C</td></tr>"
+            "<tr><td>" + json.cputempstats.min + "&deg;C</td><td>" 
+            + json.cputempstats.max + "&deg;C</td><td>" 
+            + json.cputempstats.avg + "&deg;C</td></tr>"
         );
             
         $('#ramstatsTable').append(
@@ -47,25 +47,28 @@ function asyncReload()
             + "<th>CPU Temp</th><th>RAM</th></tr>"
         );
     
-        for(i = 0; i < json.data.values.length; i++)
+        for(i = 0; i < json.logsData.values.length; i++)
         {
             $('#statsTable').append(
-                "<tr><td>" + json.data.values[i].DateTime + "</td>"
-                + "<td>" + json.data.values[i].Ping + " ms</td>"
-                + "<td>" + json.data.values[i].CPUTemp + " &deg;C</td>"
-                + "<td>" + json.data.values[i].RAM + " MB</td></tr>"
+                "<tr><td>" + json.logsData.values[i].DateTime + "</td>"
+                + "<td>" + json.logsData.values[i].Ping + " ms</td>"
+                + "<td>" + json.logsData.values[i].CPUTemp + " &deg;C</td>"
+                + "<td>" + json.logsData.values[i].RAM + " MB</td></tr>"
             );
         }
         
-        $('.dateTimeRange').text(
-            json.data.values[json.data.values.length - 1].DateTime 
+        $('.dateTimeRangeLogs').text(
+            json.logsData.values[json.logsData.values.length - 1].DateTime 
             + " and " 
-            + json.data.values[0].DateTime
+            + json.logsData.values[0].DateTime
         );
         
-        $('.dailyDataLength').text(json.dailydata.values.length);
+        $('.dailyDataLengthLogs').text(json.dailyAveragesLogs.values.length);
         
-        $('#datacount').text(json.datacount);
+        $('#datacountLogs').text(json.datacountLogs);
+        
+        $('#datacountEnvironment').text(json.datacountEnvironment);
+        
         $('#uptime').text(json.uptime);
         $("#kernelVersion").text(json.kernel);
         
@@ -97,5 +100,15 @@ function asyncReload()
         renderCanvasVarPings(json);
         renderCanvasVarTemps(json);
         renderCanvasVarMemory(json);
+        
+        renderCanvasRoomtemps(json);
+        renderCanvasAvgRoomtemps(json);
+        renderCanvasAvgRoomtempsMonth(json);
+        renderCanvasVarRoomtemps(json);
+        
+        renderCanvasHumidity(json);
+        renderCanvasAvgHumidity(json);
+        renderCanvasAvgHumidityMonth(json);
+        renderCanvasVarHumidity(json);
     });
 }
