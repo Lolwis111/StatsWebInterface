@@ -1,0 +1,29 @@
+.menu
+{
+    width: 400px;
+}
+.content
+{
+    width: auto;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.navbutton_small
+{
+    width: 100px;
+    background-color: #202020;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+    padding: 8px 16px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 5px;
+    margin-left: 10px;
+}
+
+.navbutton_small:hover
+{
+    background-color: #CCCCCC;
+    color: #202020;
+}

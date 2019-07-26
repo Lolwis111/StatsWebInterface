@@ -2,31 +2,37 @@ function renderCanvasHumidity(json)
 {
     canvas = document.getElementById("canvas_diagramm_humidity");
     
-    canvas.setAttribute('width', bigCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, bigCanvasWidth);
+    renderGrid(context, canvasWidth);
+    
+    var w = json.environmentData.values.length;
+    if(canvasCount > -1)
+    {
+        w = canvasCount;
+    }
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / json.environmentData.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / w;
 
-    for(var i = 0; i < json.environmentData.values.length; i++)
+    for(var i = 0; i < w; i++)
     {
-        temp = json.environmentData.values[i].Humidity;
-        scaledTemp = (temp * graphMax) / 100;
-        tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
-        tmpHeight = ((scaledTemp * graphFactor)).toFixed();
+        humidity = json.environmentData.values[i].Humidity;
+        scaledHumidity = (humidity * graphMax) / 100;
+        tmpTop = (canvasHeight - (graphFactor * scaledHumidity)).toFixed() - graphPadding;
+        tmpHeight = ((scaledHumidity * graphFactor)).toFixed();
         
-        context.fillStyle = createColor(scaledTemp);
+        context.fillStyle = createColor(scaledHumidity);
         
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
-        context.fillText(~~temp + "%", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~humidity + "%", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
@@ -34,31 +40,31 @@ function renderCanvasAvgHumidity(json)
 {
     canvas = document.getElementById("canvas_diagramm_avghumidity");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.weeklyHumidity.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.weeklyHumidity.values.length;
 
     for(var i = 0; i < json.weeklyHumidity.values.length; i++)
     {
-        temp = json.weeklyHumidity.values[i].AVGHumidity;
-        scaledTemp = (temp * graphMax) / 100;
-        tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
-        tmpHeight = ((scaledTemp * graphFactor)).toFixed();
+        humidity = json.weeklyHumidity.values[i].AVGHumidity;
+        scaledHumidity = (humidity * graphMax) / 100;
+        tmpTop = (canvasHeight - (graphFactor * scaledHumidity)).toFixed() - graphPadding;
+        tmpHeight = ((scaledHumidity * graphFactor)).toFixed();
 
-        context.fillStyle = createColor(scaledTemp);
+        context.fillStyle = createColor(scaledHumidity);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
 
         context.fillStyle = graphTextcolor;
-        context.fillText(~~temp + "%", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~humidity + "%", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
@@ -66,32 +72,32 @@ function renderCanvasAvgHumidityMonth(json)
 {
     canvas = document.getElementById("canvas_diagramm_avghumiditymonth");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.monthlyTemp.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.monthlyTemp.values.length;
 
-    for(var i = 0; i < json.monthlyTemp.values.length; i++)
+    for(var i = 0; i < json.monthlyHumidity.values.length; i++)
     {
-        temp = json.monthlyTemp.values[i].AVGHumidity;
-        scaledTemp = (temp * graphMax) / 100;
+        humidity = json.monthlyHumidity.values[i].AVGHumidity;
+        scaledHumidity = (humidity * graphMax) / 100;
         
-        tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
-        tmpHeight = ((scaledTemp * graphFactor)).toFixed();
+        tmpTop = (canvasHeight - (graphFactor * scaledHumidity)).toFixed() - graphPadding;
+        tmpHeight = ((scaledHumidity * graphFactor)).toFixed();
 
-        context.fillStyle = createColor(scaledTemp);
+        context.fillStyle = createColor(scaledHumidity);
 
         context.fillRect(graphWidth + ((i - 1) * graphWidth) + graphPadding, 
                         tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
-        var text = json.monthlyTemp.values[i].Month + " (" + ~~temp + "%)";
+        var text = json.monthlyHumidity.values[i].Month + " (" + ~~humidity + "%)";
         context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
@@ -100,11 +106,11 @@ function renderCanvasVarHumidity(json)
 {
     canvas = document.getElementById("canvas_diagramm_varhumidity");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', smallCanvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var variance = [];
     
@@ -124,7 +130,7 @@ function renderCanvasVarHumidity(json)
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
+    var graphWidth = (canvasWidth - graphPadding) / variance.length;
 
     for(var i = 0; i < variance.length; i++)
     {

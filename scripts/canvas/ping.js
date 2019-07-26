@@ -2,18 +2,24 @@ function renderCanvasPings(json)
 {
     canvas = document.getElementById("canvas_diagramm_ping");
     
-    canvas.setAttribute('width', bigCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, bigCanvasWidth);
+    renderGrid(context, canvasWidth);
+    
+    var w = json.logsData.values.length;
+    if(canvasCount > -1)
+    {
+        w = canvasCount;
+    }
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / json.logsData.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / w;
 
-    for(var i = 0; i < json.logsData.values.length; i++)
+    for(var i = 0; i < w; i++)
     {
         ping = json.logsData.values[i].Ping;
         tmpTop = (canvasHeight - (graphFactor * ping)).toFixed() - graphPadding;
@@ -34,16 +40,16 @@ function renderCanvasAvgPings(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgping");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
 
     for(var i = 0; i < json.dailyAveragesLogs.values.length; i++)
     {
@@ -66,11 +72,11 @@ function renderCanvasAvgPingsDOW(json)
     var height = canvasHeight;
     canvas = document.getElementById("canvas_diagramm_avgpingdow");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', height.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var maxPing = 0;
     for(var i = 0; i < 7; i++)
@@ -86,7 +92,7 @@ function renderCanvasAvgPingsDOW(json)
     var graphMax = maxPing + 10;
     var graphPadding = 10;
     var graphFactor = (height - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / 7;
+    var graphWidth = (canvasWidth - graphPadding) / 7;
 
     for(var i = 0; i < 7; i++)
     {
@@ -109,11 +115,11 @@ function renderCanvasVarPings(json)
 {
     canvas = document.getElementById("canvas_diagramm_varping");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', smallCanvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var variance = [];
     
@@ -133,7 +139,7 @@ function renderCanvasVarPings(json)
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
+    var graphWidth = (canvasWidth - graphPadding) / variance.length;
 
     for(var i = 0; i < variance.length; i++)
     {

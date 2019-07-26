@@ -10,6 +10,12 @@ html
     background-color: #202020;
 }
 
+#statsTable
+{
+    display: block;
+}
+
+
 #header
 {
     margin: 10px;
@@ -38,7 +44,7 @@ html
 
 .tab_button
 {
-    width: 150px;
+    width: 170px;
     background-color: #202020;
     color: #CCCCCC;
     border: 1px solid #CCCCCC;
@@ -56,7 +62,7 @@ html
 
 .navbutton
 {
-    width: 320px;
+    width: 330px;
     background-color: #202020;
     color: #CCCCCC;
     border: 1px solid #CCCCCC;
@@ -75,13 +81,19 @@ html
 
 .minmaxTable
 {
-    width: 320px;
+    width: 400px;
     text-align: center;
+    margin: 7px;
+}
+
+#currentValues
+{
+    font-size: 1.1em;
 }
 
 #infotext
 {
-    margin-left: 5px;
+    margin-left: 10px;
     line-height: 1cm;
 }
 
@@ -89,6 +101,7 @@ html
 {
     margin-left: 5px;
 }
+
 
 #right_graph
 {

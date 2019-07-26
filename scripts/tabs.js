@@ -6,12 +6,18 @@ function initTabs()
     
     if(cookie == "")
     {
-        openTab('Pings');
+        openTab('Setup');
     }
     else
     {
         openTab(cookie);
     }
+
+}
+
+function toggleTable()
+{
+    $("#statsTable").toggle();
 }
 
 function openTab(tab)
@@ -51,4 +57,9 @@ function phpMyAdmin()
 function homeService()
 {
     window.location.href = "http://192.168.178.56/homeService/";
+}
+
+function tasks()
+{
+    window.location.href = "http://192.168.178.56/tasks.php";
 }

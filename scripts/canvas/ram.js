@@ -2,18 +2,24 @@ function renderCanvasMemory(json)
 {
     canvas = document.getElementById("canvas_diagramm_ram");
     
-    canvas.setAttribute('width', bigCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, bigCanvasWidth);
+    renderGrid(context, canvasWidth);
+    
+    var w = json.logsData.values.length;
+    if(canvasCount > -1)
+    {
+        w = canvasCount;
+    }
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / json.logsData.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / w;
 
-    for(var i = 0; i < json.logsData.values.length; i++)
+    for(var i = 0; i < w; i++)
     {
         ram = json.logsData.values[i].RAM;
         scaledRam = (ram * graphMax) / 1024;
@@ -43,11 +49,11 @@ function renderCanvasVarMemory(json)
 {
     canvas = document.getElementById("canvas_diagramm_varram");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', smallCanvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var variance = [];
     
@@ -67,7 +73,7 @@ function renderCanvasVarMemory(json)
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
+    var graphWidth = (canvasWidth - graphPadding) / variance.length;
 
     for(var i = 0; i < variance.length; i++)
     {
@@ -88,16 +94,16 @@ function renderCanvasAvgMemory(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgram");
 
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
 
     for(var i = 0; i < json.dailyAveragesLogs.values.length; i++)
     {

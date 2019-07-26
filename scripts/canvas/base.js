@@ -1,14 +1,24 @@
 var canvasHeight = 320;
 var smallCanvasHeight = 100;
-var bigCanvasWidth = 250;
-var smallCanvasWidth = bigCanvasWidth;
+var canvasWidth = 250;
 
 var graphTextcolor = "#DBDBDB";
+var canvasCount = -1;
 
 function initCanvas()
 {
-    bigCanvasWidth = $(document).width() - $('#left_table').width() - 25;
-    smallCanvasWidth = bigCanvasWidth;
+    if($(document).width() < 1000)
+    {
+        canvasWidth = $(document).width() - 25;
+        canvasCount = 10;
+        leftTable = document.getElementById('left_table')
+        leftTable.style.display = 'none';
+    }
+    else
+    {
+        canvasWidth = $(document).width() - $('#left_table').width() - 25;
+        canvasCount = -1;
+    }
 }
 
 /**
@@ -49,9 +59,23 @@ function createColor(value)
     hex1 = (~~value).toString(16);
     hex2 = (255 - (~~value)).toString(16);
     
+    /* values smaller than 16 create on digit hex strings,
+     * append leading 0 here */
+    if(value < 16)
+    {
+        hex1 = "0" + hex1;
+    }
+    
+    /* values bigger than 239 result in one digit hex strings,
+     * as 255 - 239 = 16. Append leading 0 here */
+    if(value > 239)
+    {
+        hex2 = "0" + hex2;
+    }
+    
     var color = "#" + hex1 + "" + hex2 + "00";
     
-    console.log(value + ": " + color);
+    /* console.log(value + ": " + color); */
     
     return color;
 }

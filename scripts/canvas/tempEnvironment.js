@@ -2,18 +2,24 @@ function renderCanvasRoomtemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_temp_room");
     
-    canvas.setAttribute('width', bigCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, bigCanvasWidth);
-    
+    renderGrid(context, canvasWidth);
+
+    var w = json.environmentData.values.length;
+    if(canvasCount > -1)
+    {
+        w = canvasCount;
+    }
+
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / json.environmentData.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / w;
 
-    for(var i = 0; i < json.environmentData.values.length; i++)
+    for(var i = 0; i < w; i++)
     {
         temp = json.environmentData.values[i].Temperature;
         scaledTemp = (temp * graphMax) / 100;
@@ -26,7 +32,7 @@ function renderCanvasRoomtemps(json)
                         tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
-        context.fillText(~~temp + "C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~temp + " C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
@@ -34,16 +40,16 @@ function renderCanvasAvgRoomtemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtemp_room");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
-    var graphMax = 100;
+    var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailyAveragesEnvironment.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.dailyAveragesEnvironment.values.length;
 
     for(var i = 0; i < json.dailyAveragesEnvironment.values.length; i++)
     {
@@ -66,20 +72,21 @@ function renderCanvasAvgRoomtempsMonth(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtempmonth_room");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
-    var graphMax = 255;
+    var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.monthlyTemp.values.length;
+    var dataSize = json.monthlyTemp.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / dataSize;
 
-    for(var i = 0; i < json.monthlyTemp.values.length; i++)
+    for(var i = 0; i < dataSize; i++)
     {
-        temp = json.monthlyTemp.values[i].AVGTemperature;
+        temp = json.monthlyTemp.values[i].AVGTemp;
         scaledTemp = (temp * graphMax) / 100;
         
         tmpTop = (canvasHeight - (graphFactor * scaledTemp)).toFixed() - graphPadding;
@@ -92,7 +99,8 @@ function renderCanvasAvgRoomtempsMonth(json)
         
         context.fillStyle = graphTextcolor;
         var text = json.monthlyTemp.values[i].Month + " (" + ~~temp + "C)";
-        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(text, graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, 
+                         canvasHeight - 2, graphWidth);
     }
 }
 
@@ -100,11 +108,11 @@ function renderCanvasVarRoomtemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_vartemp_room");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', smallCanvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var variance = [];
     
@@ -124,7 +132,7 @@ function renderCanvasVarRoomtemps(json)
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
+    var graphWidth = (canvasWidth - graphPadding) / variance.length;
 
     for(var i = 0; i < variance.length; i++)
     {

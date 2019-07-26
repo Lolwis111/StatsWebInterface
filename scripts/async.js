@@ -1,7 +1,25 @@
+var notificationCount = 0;
+
+function notify()
+{
+    if(notificationCount > 0)
+    {
+        document.title = "(" + notificationCount + ") Levin's DEV Server";
+    }
+    else
+    {
+        document.title = "Levin's DEV Server";
+    }
+}
+
 function asyncReload()
 {
     result = $.getJSON("getDataLogs.php", function(data, status, xhr)
     {
+        notificationCount++;
+        
+        notify();
+        
         console.log(status);
         
         json = result.responseJSON;
@@ -9,9 +27,34 @@ function asyncReload()
         $('#pingstatsTable tr').remove();
         $('#tempstatsTable tr').remove();
         $('#ramstatsTable tr').remove();
+        $('#roomtempstatsTable tr').remove();
+        $('#humiditystatsTable tr').remove();
+        $('#medianTable tr').remove();
+        $('#currentValues tr').remove();
+        
+        $('#roomtempstatsTable').append(
+            "<tr><th>Min temp</th><th>Max temp</th><th>Avg temp</th></tr>"
+        );
+        
+        $('#roomtempstatsTable').append(
+            "<tr><td>" + json.environmenttempstats.min + "&deg;C</td><td>" 
+            + json.environmenttempstats.max + "&deg;C</td><td>" 
+            + json.environmenttempstats.avg + "&deg;C</td></tr>"
+        );
+        
+        $('#humiditystatsTable').append(
+            "<tr><th>Min humidity</th><th>Max humidity</th><th>Avg humidity</th></tr>"
+        );
+        
+        $('#humiditystatsTable').append(
+            "<tr><td>" + json.humiditystats.min + " %</td><td>" 
+            + json.humiditystats.max + " %</td><td>" 
+            + json.humiditystats.avg + " %</td></tr>"
+        );
+        
         
         $('#pingstatsTable').append(
-            "<tr><th>Min Ping</th><th>Max Ping</th><th>Avg Ping</th></tr>"
+            "<tr><th>Min RTT</th><th>Max RTT</th><th>Avg RTT</th></tr>"
         );
         
         $('#pingstatsTable').append(
@@ -21,7 +64,7 @@ function asyncReload()
         );
             
         $('#tempstatsTable').append(
-            "<tr><th>Min Temp</th><th>Max Temp</th><th>Avg Temp</th></tr>"
+            "<tr><th>Min cpu-temp</th><th>Max cpu-temp</th><th>Avg cpu-temp</th></tr>"
         );
         
         $('#tempstatsTable').append(
@@ -57,16 +100,33 @@ function asyncReload()
             );
         }
         
+        $('#medianTable').append(
+            "<tr><th>Median temperture</th><th>median humidity</th></tr>"
+            + "<tr><td>" + json.medianTemperatureRoom + "&deg;C</td><td>" 
+            + json.medianHumidity + " %</td></tr>"
+        );
+        
+        $('#currentValues').append(
+            "<tr><th>Current temperature</th><th>Current humidity</th></th>"
+            + "<tr><td>" + json.environmentData.values[0].Temperature + " &deg;C</td>"
+            + "<td>" + json.environmentData.values[0].Humidity + " %</td></tr>"
+        );
+        
         $('.dateTimeRangeLogs').text(
             json.logsData.values[json.logsData.values.length - 1].DateTime 
             + " and " 
             + json.logsData.values[0].DateTime
         );
         
+        $('.dateTimeRangeEnvironment').text(
+            json.environmentData.values[json.environmentData.values.length - 1].DateTime 
+            + " and " 
+            + json.environmentData.values[0].DateTime
+        );
+        
         $('.dailyDataLengthLogs').text(json.dailyAveragesLogs.values.length);
         
         $('#datacountLogs').text(json.datacountLogs);
-        
         $('#datacountEnvironment').text(json.datacountEnvironment);
         
         $('#uptime').text(json.uptime);

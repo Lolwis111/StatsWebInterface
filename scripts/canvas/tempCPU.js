@@ -2,18 +2,24 @@ function renderCanvasTemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_temp_cpu");
     
-    canvas.setAttribute('width', bigCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, bigCanvasWidth);
+    renderGrid(context, canvasWidth);
+    
+    var w = json.logsData.values.length;
+    if(canvasCount > -1)
+    {
+        w = canvasCount;
+    }
     
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (bigCanvasWidth - graphPadding) / json.logsData.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / w;
 
-    for(var i = 0; i < json.logsData.values.length; i++)
+    for(var i = 0; i < w; i++)
     {
         temp = json.logsData.values[i].CPUTemp;
         scaledTemp = (temp * graphMax) / 100;
@@ -26,7 +32,7 @@ function renderCanvasTemps(json)
                         tmpTop, graphWidth - graphPadding, tmpHeight);
         
         context.fillStyle = graphTextcolor;
-        context.fillText(~~temp + "C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
+        context.fillText(~~temp + " C", graphWidth + ((i - 1) * graphWidth) + graphPadding + 2, canvasHeight - 2, graphWidth);
     }
 }
 
@@ -34,16 +40,16 @@ function renderCanvasAvgTemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtemp_cpu");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 255;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.dailyAveragesLogs.values.length;
 
     for(var i = 0; i < json.dailyAveragesLogs.values.length; i++)
     {
@@ -66,16 +72,16 @@ function renderCanvasAvgTempsMonth(json)
 {
     canvas = document.getElementById("canvas_diagramm_avgtempmonth_cpu");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', canvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (canvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / json.monthlyCPUTemp.values.length;
+    var graphWidth = (canvasWidth - graphPadding) / json.monthlyCPUTemp.values.length;
 
     for(var i = 0; i < json.monthlyCPUTemp.values.length; i++)
     {
@@ -100,11 +106,11 @@ function renderCanvasVarTemps(json)
 {
     canvas = document.getElementById("canvas_diagramm_vartemp_cpu");
     
-    canvas.setAttribute('width', smallCanvasWidth.toFixed());
+    canvas.setAttribute('width', canvasWidth.toFixed());
     canvas.setAttribute('height', smallCanvasHeight.toFixed());
     context = canvas.getContext("2d");
     
-    renderGrid(context, smallCanvasWidth);
+    renderGrid(context, canvasWidth);
     
     var variance = [];
     
@@ -124,7 +130,7 @@ function renderCanvasVarTemps(json)
     var graphMax = 100;
     var graphPadding = 10;
     var graphFactor = (smallCanvasHeight - (2 * graphPadding)) / graphMax;
-    var graphWidth = (smallCanvasWidth - graphPadding) / variance.length;
+    var graphWidth = (canvasWidth - graphPadding) / variance.length;
 
     for(var i = 0; i < variance.length; i++)
     {

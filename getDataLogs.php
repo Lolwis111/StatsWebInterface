@@ -44,7 +44,10 @@
     $json = $json . getAveragePing($mysqli) . ",";
     $json = $json . getMonthlyHumidity($mysqli) . ",";
     $json = $json . getMonthlyTemps($mysqli) . ",";
-    $json = $json . getMonthlyCPUTemps($mysqli);
+    $json = $json . getMonthlyCPUTemps($mysqli) . ",";
+    
+    $json = $json . getTemperatureMedian($mysqli) . ",";
+    $json = $json . getHumidityMedian($mysqli);
     
     $json = $json . "}";
     
@@ -82,9 +85,9 @@
     
     function getTempStats($mysqli)//
     {
-        $query = "SELECT ROUND(MAX(`Temperature`), 3) as maxtemp," 
-            . "ROUND(MIN(`Temperature`), 3) as mintemp, "
-            . "ROUND(AVG(`Temperature`), 3) as avgtemp "
+        $query = "SELECT ROUND(MAX(`Temperature`), 1) as maxtemp," 
+            . "ROUND(MIN(`Temperature`), 1) as mintemp, "
+            . "ROUND(AVG(`Temperature`), 1) as avgtemp "
             . "FROM `environment`;";
                 
         $result = querySql($query, $mysqli);
@@ -101,11 +104,51 @@
         return $json;
     }
     
+    function getTemperatureMedian($mysqli)
+    {
+        $query = "SELECT AVG(dd.`Temperature`) as median_val 
+            FROM (
+            SELECT `Temperature`, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum 
+            FROM `environment` `Temperature`, (SELECT @rownum:=0) r
+            WHERE `Temperature` is NOT NULL
+            ORDER BY `Temperature`) as dd
+            WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );";
+        $result = querySql($query, $mysqli);
+        
+        $json = "";
+        if($row = $result->fetch_assoc())
+        {
+            $json = '"medianTemperatureRoom": ' . $row["median_val"];
+        }
+        
+        return $json;
+    }
+    
+    function getHumidityMedian($mysqli)
+    {
+        $query = "SELECT AVG(dd.`Humidity`) as median_val 
+            FROM (
+            SELECT `Humidity`, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum 
+            FROM `environment` `Humidity`, (SELECT @rownum:=0) r
+            WHERE `Humidity` is NOT NULL
+            ORDER BY `Humidity`) as dd
+            WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );";
+        $result = querySql($query, $mysqli);
+        
+        $json = "";
+        if($row = $result->fetch_assoc())
+        {
+            $json = '"medianHumidity": ' . $row["median_val"];
+        }
+        
+        return $json;
+    }
+    
     function getHumidityStats($mysqli)//
     {
-        $query = "SELECT ROUND(MAX(`Humidity`), 3) as maxhumidity,"
-            . "ROUND(MIN(`Humidity`), 3) as minhumidity,"
-            . "ROUND(AVG(`Humidity`), 3) as avghumidity "
+        $query = "SELECT ROUND(MAX(`Humidity`), 1) as maxhumidity,"
+            . "ROUND(MIN(`Humidity`), 1) as minhumidity,"
+            . "ROUND(AVG(`Humidity`), 1) as avghumidity "
             . "FROM `environment`;";
             
         $result = querySql($query, $mysqli);
@@ -124,9 +167,9 @@
     function getPingStats($mysqli)//
     {
         // select stats of ping
-        $query = "SELECT ROUND(MAX(`Ping`), 3) as maxping," 
-            . "ROUND(MIN(`Ping`), 3) as minping, "
-            . "ROUND(AVG(`Ping`), 3) as avgping FROM `logs`;";
+        $query = "SELECT ROUND(MAX(`Ping`), 1) as maxping," 
+            . "ROUND(MIN(`Ping`), 1) as minping, "
+            . "ROUND(AVG(`Ping`), 1) as avgping FROM `logs`;";
                 
         $result = querySql($query, $mysqli);
         $json = "";
@@ -145,9 +188,9 @@
     function getCPUTempStats($mysqli)//
     {
         // select stats of temp
-        $query = "SELECT ROUND(MAX(`CPUTemp`), 3) as maxcpu,"
-            . "ROUND(MIN(`CPUTemp`), 3) as mincpu,"
-            . "ROUND(AVG(`CPUTemp`), 3) as avgcpu FROM `logs`;";
+        $query = "SELECT ROUND(MAX(`CPUTemp`), 1) as maxcpu,"
+            . "ROUND(MIN(`CPUTemp`), 1) as mincpu,"
+            . "ROUND(AVG(`CPUTemp`), 1) as avgcpu FROM `logs`;";
             
         $result = querySql($query, $mysqli);
         $json = "";
@@ -165,9 +208,9 @@
     function getRAMStats($mysqli)//
     {
         // select stats of ram
-        $query = "SELECT ROUND(MAX(`UsedRAM`), 3) as maxram,"
-            . "ROUND(MIN(`UsedRAM`), 3) as minram,"            
-            . "ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs`"
+        $query = "SELECT ROUND(MAX(`UsedRAM`), 1) as maxram,"
+            . "ROUND(MIN(`UsedRAM`), 1) as minram,"            
+            . "ROUND(AVG(`UsedRAM`), 1) as avgram FROM `logs`"
             . "WHERE `UsedRAM` > 0;";
             
         $result = querySql($query, $mysqli);
@@ -250,8 +293,8 @@
     function getDailyAveragesEnvironment($mysqli)//
     {
         // select the daily averages
-        $query = "SELECT `Date`, ROUND(AVG(`Temperature`), 3) as avgtemperature," 
-            . "ROUND(AVG(`Humidity`), 3) as avghumidity "
+        $query = "SELECT `Date`, ROUND(AVG(`Temperature`), 1) as avgtemperature," 
+            . "ROUND(AVG(`Humidity`), 1) as avghumidity "
             . "FROM `environment` "
             . "GROUP BY `Date` ORDER BY `Date` DESC LIMIT 12;";
             
@@ -280,9 +323,9 @@
     function getDailyAveragesLogs($mysqli)//
     {
         // select the daily averages
-        $query = "SELECT `Date`, ROUND(AVG(`Ping`), 3) as avgping," 
-            . "ROUND(AVG(`CPUTemp`), 3) as avgtemp,"
-            . "ROUND(AVG(`UsedRAM`), 3) as avgram FROM `logs`"
+        $query = "SELECT `Date`, ROUND(AVG(`Ping`), 1) as avgping," 
+            . "ROUND(AVG(`CPUTemp`), 1) as avgtemp,"
+            . "ROUND(AVG(`UsedRAM`), 1) as avgram FROM `logs`"
             . "GROUP BY `Date` ORDER BY `Date` DESC LIMIT 12;";
             
         $result = querySql($query, $mysqli);
@@ -311,9 +354,9 @@
     {
         // select the daily ping averages by day of week
         $query = "SELECT DAYNAME(`Date`) as weekday,"
-            . "ROUND(MAX(`Temperature`), 3) as maxtemperature," 
-            . "ROUND(MIN(`Temperature`), 3) as mintemperature, "
-            . "ROUND(AVG(`Temperature`), 3) as avgtemperature "
+            . "ROUND(MAX(`Temperature`), 1) as maxtemperature," 
+            . "ROUND(MIN(`Temperature`), 1) as mintemperature, "
+            . "ROUND(AVG(`Temperature`), 1) as avgtemperature "
             . "FROM `environment` "
             . "GROUP BY DAYNAME(`Date`)"
             . "ORDER BY WEEKDAY(`Date`)";
@@ -345,9 +388,9 @@
     {
         // select the daily ping averages by day of week
         $query = "SELECT DAYNAME(`Date`) as weekday,"
-            . "ROUND(MAX(`Humidity`), 3) as maxhumidity," 
-            . "ROUND(MIN(`Humidity`), 3) as minhumidity, "
-            . "ROUND(AVG(`Humidity`), 3) as avghumidity "
+            . "ROUND(MAX(`Humidity`), 1) as maxhumidity," 
+            . "ROUND(MIN(`Humidity`), 1) as minhumidity, "
+            . "ROUND(AVG(`Humidity`), 1) as avghumidity "
             . "FROM `environment` "
             . "GROUP BY DAYNAME(`Date`)"
             . "ORDER BY WEEKDAY(`Date`)";
@@ -379,9 +422,9 @@
     {
         // select the daily ping averages by day of week
         $query = "SELECT DAYNAME(`Date`) as weekday,"
-            . "ROUND(MAX(`Ping`), 3) as maxping," 
-            . "ROUND(MIN(`Ping`), 3) as minping, "
-            . "ROUND(AVG(`Ping`), 3) as avgping FROM `logs`"
+            . "ROUND(MAX(`Ping`), 1) as maxping," 
+            . "ROUND(MIN(`Ping`), 1) as minping, "
+            . "ROUND(AVG(`Ping`), 1) as avgping FROM `logs`"
             . "GROUP BY DAYNAME(`Date`)"
             . "ORDER BY WEEKDAY(`Date`)";
             
@@ -412,9 +455,9 @@
     {
         // select the monthly temp averages
         $query = "SELECT MONTHNAME(`Date`) as month,"
-            . "ROUND(MAX(`Temperature`), 3) as maxtemp," 
-            . "ROUND(MIN(`Temperature`), 3) as mintemp, "
-            . "ROUND(AVG(`Temperature`), 3) as avgtemp FROM `environment`"
+            . "ROUND(MAX(`Temperature`), 1) as maxtemp," 
+            . "ROUND(MIN(`Temperature`), 1) as mintemp, "
+            . "ROUND(AVG(`Temperature`), 1) as avgtemp FROM `environment`"
             . "GROUP BY MONTHNAME(`Date`)"
             . "ORDER BY MONTH(`Date`)";
             
@@ -445,15 +488,15 @@
     {
         // select the monthly temp averages
         $query = "SELECT MONTHNAME(`Date`) as month,"
-            . "ROUND(MAX(`Humidity`), 3) as maxhumidity," 
-            . "ROUND(MIN(`Humidity`), 3) as minhumidity, "
-            . "ROUND(AVG(`Humidity`), 3) as avghumidity FROM `environment`"
+            . "ROUND(MAX(`Humidity`), 1) as maxhumidity," 
+            . "ROUND(MIN(`Humidity`), 1) as minhumidity, "
+            . "ROUND(AVG(`Humidity`), 1) as avghumidity FROM `environment`"
             . "GROUP BY MONTHNAME(`Date`)"
             . "ORDER BY MONTH(`Date`)";
             
         $result = querySql($query, $mysqli);
     
-        $json = '"monthlyTemp":{"values":[';
+        $json = '"monthlyHumidity":{"values":[';
         $rows = $result->num_rows;
         for($i = 0; $i < $rows; $i++)
         {
@@ -478,9 +521,9 @@
     {
         // select the monthly temp averages
         $query = "SELECT MONTHNAME(`Date`) as month,"
-            . "ROUND(MAX(`CPUTemp`), 3) as maxtemp," 
-            . "ROUND(MIN(`CPUTemp`), 3) as mintemp, "
-            . "ROUND(AVG(`CPUTemp`), 3) as avgtemp FROM `logs`"
+            . "ROUND(MAX(`CPUTemp`), 1) as maxtemp," 
+            . "ROUND(MIN(`CPUTemp`), 1) as mintemp, "
+            . "ROUND(AVG(`CPUTemp`), 1) as avgtemp FROM `logs`"
             . "GROUP BY MONTHNAME(`Date`)"
             . "ORDER BY MONTH(`Date`)";
             

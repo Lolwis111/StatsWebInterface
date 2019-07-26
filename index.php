@@ -2,10 +2,11 @@
 
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Levins DEV Server</title>
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
-    <body onload="initTabs();asyncReload();">
+    <body onload="initTabs();asyncReload();" onresize="asyncReload();" onmouseover="notificationCount = 0; notify();">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script type="text/javascript" src="scripts/canvas/base.js" ></script>
         <script type="text/javascript" src="scripts/canvas/ram.js" ></script>
@@ -28,13 +29,20 @@
                 <table class="minmaxTable" id="ramstatsTable" border="1"></table>
             </div>
             
+            <div class="floater" id="infotables2">
+                <table class="minmaxTable" id="roomtempstatsTable" border="1"></table>
+                <table class="minmaxTable" id="humiditystatsTable" border="1"></table>
+                <table class="minmaxTable" id="medianTable" border="1"></table> 
+                <table class="minmaxTable" id="currentValues" border="1"></table>
+            </div>
+            
             <div class="floater" id="infotext">
                 <p>
                     <span id="datacountLogs"></span> entries available in table logs.<br>
                     <span id="datacountEnvironment"></span> entries available in table environment.<br>
                     Uptime: <span id="uptime"></span><br>
-                    This site uses one cookie to remember which tab page you
-                    used on your last visit.<br>
+                    This site uses one cookie to remember which tab<br>
+                    page you used on your last visit.<br>
                     last refresh: <span id="lastRefresh"></span><br>
                     Kernel: <span id="kernelVersion"></span><br>
                 </p>
@@ -51,6 +59,10 @@
                 <br>
                 <button id="homeservice_button" class="navbutton" onclick="homeService();">
                     Home Service
+                </button>
+                <br>
+                <button id="tasks_button" class="navbutton" onclick="tasks();">
+                    Tasks
                 </button>
             </div>
             
@@ -69,11 +81,18 @@
             <div id="right_graph" class="floater">
                 
                 <div class="tab_menu">
-                    <button class="tab_button" id="BtnPings" onclick="openTab('Pings')">Pings</button>
+                    <button class="tab_button" id="BtnSetup" onclick="openTab('Setup')">The setup</button>
+                    <button class="tab_button" id="BtnPings" onclick="openTab('Pings')">Ping RTTs</button>
                     <button class="tab_button" id="BtnTempsCPU" onclick="openTab('TempsCPU')">Temperatures (CPU)</button>
                     <button class="tab_button" id="BtnRAM" onclick="openTab('RAM')">RAM</button>
                     <button class="tab_button" id="BtnTempsRoom" onclick="openTab('TempsRoom')">Temperatures (room)</button>
                     <button class="tab_button" id="BtnHumidity" onclick="openTab('Humidity')">Humidity</button>
+                    <button class="tab_button" id="BtnToggleTable" onclick="toggleTable()">Toggle table</button>
+                </div>
+                
+                <div id="Setup" class="tabpage">
+                    <h1>The Setup</h1>
+                    <img src="setup.jpg" width="1000px" alt="the setup" id="setupImage">
                 </div>
                 
                 <div id="Pings" class="tabpage">
