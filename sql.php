@@ -2,7 +2,7 @@
     $sqlServer = [
         'server' => 'localhost', 
         'username' => 'loguser', 
-        'password' => 'pylogpsw', 
+        'password' => 'pylogpsw', // this is a local password that can't do any harm, so don't worry
         'database' => 'logger',
     ];
     
